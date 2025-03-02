@@ -27,6 +27,10 @@ export const TeamConfiguration = () => {
         },
     });
 
+    if (teamSettingsQuery.isLoading) {
+        return <CardLoader />;
+    }
+
     const fetch = useNetlifyExtensionUIFetch();
     const [allSites, setAllSites] = useState([]);
     const [displayedSites, setDisplayedSites] = useState([]);
@@ -70,11 +74,11 @@ export const TeamConfiguration = () => {
     };
 
 
-    const totalPages = Math.ceil(allSites.length / sitesPerPage);
+    const totalPages = Math.ceil(allSites.filter(site =>
+        site.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ).length / sitesPerPage);
 
-    if (teamSettingsQuery.isLoading) {
-        return <CardLoader />;
-    }
+
 
     return (
         <TeamConfigurationSurface>
@@ -88,7 +92,8 @@ export const TeamConfiguration = () => {
                     <FormField name="search" label="Search sites">
                         <input
                             type="text"
-                            defaultValue={searchTerm}
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Enter site name"
                         />
                     </FormField>
