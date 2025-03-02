@@ -6,13 +6,8 @@ import {
     Form,
     FormField,
     FormFieldSecret,
-    TeamConfigurationSurface,
-    Table,
-    TableHead,
-    TableRow,
-    TableHeader,
-    TableBody,
-    TableCell
+    TeamConfigurationSurface
+
 } from "@netlify/sdk/ui/react/components";
 import { useNetlifySDK, useNetlifyExtensionUIFetch } from "@netlify/sdk/ui/react";
 import { trpc } from "../trpc";
@@ -64,24 +59,13 @@ export const TeamConfiguration = () => {
                 <br />
                 <br />
                 <CardTitle>{sdk.extension.name}</CardTitle>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableHeader>Name</TableHeader>
-                            <TableHeader>URL</TableHeader>
-                            <TableHeader>Created At</TableHeader>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {sites.map((site) => (
-                            <TableRow key={site.id}>
-                                <TableCell>{site.name}</TableCell>
-                                <TableCell>{site.url}</TableCell>
-                                <TableCell>{new Date(site.created_at).toLocaleDateString()}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                {sites.map((site) => (
+                    <Card key={site.id}>
+                        <CardTitle>{site.name}</CardTitle>
+                        <p>URL: {site.url}</p>
+                        <p>Created At: {new Date(site.created_at).toLocaleDateString()}</p>
+                    </Card>
+                ))}
             </Card>
         </TeamConfigurationSurface>
     );
