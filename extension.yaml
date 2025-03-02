@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://sdk.netlify.com/sdk/config-schema.json
 config:
-  slug: dns-transfer
+  slug: dx715c5i-netlify-dns-transfer-extension
   name: dns-transfer
   scopes:
     site: ["read", "write"]
