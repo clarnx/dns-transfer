@@ -30,7 +30,9 @@ export const TeamConfiguration = () => {
   return (
     <TeamConfigurationSurface>
       <Card>
-        <img src={logoImg} width="64" height="auto" />
+        <img src={logoImg} width="128" height="auto" />
+        <br />
+        <br />
         <CardTitle>Example Section for {sdk.extension.name}</CardTitle>
         <Form
           defaultValues={
