@@ -11,7 +11,7 @@ import {
 import { useNetlifySDK } from "@netlify/sdk/ui/react";
 import { trpc } from "../trpc";
 import { teamSettingsSchema } from "../../schema/team-configuration";
-import logoImg from "../../assets/netlify-logo.png";
+import logoImg from "../../assets/dns-records-transfer.svg";
 
 export const TeamConfiguration = () => {
   const sdk = useNetlifySDK();
@@ -30,7 +30,7 @@ export const TeamConfiguration = () => {
   return (
     <TeamConfigurationSurface>
       <Card>
-        <img src={logoImg} />
+        <img src={logoImg} width="64" height="auto" />
         <CardTitle>Example Section for {sdk.extension.name}</CardTitle>
         <Form
           defaultValues={
@@ -49,22 +49,6 @@ export const TeamConfiguration = () => {
             type="text"
             label="Example String"
             helpText="This is an example string"
-          />
-          <FormField
-            name="exampleNumber"
-            type="number"
-            label="Example Number"
-            helpText="This is an example number"
-          />
-          <FormFieldSecret
-            name="exampleSecret"
-            label="Example Secret"
-            helpText="This is an example secret"
-          />
-          <Checkbox
-            name="exampleBoolean"
-            label="Example Boolean"
-            helpText="This is an example boolean"
           />
         </Form>
       </Card>
