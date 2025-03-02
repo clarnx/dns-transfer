@@ -74,9 +74,9 @@ export const TeamConfiguration = () => {
         site.name.toLowerCase().includes(searchTerm.toLowerCase())
     ).length / sitesPerPage);
 
-    if (teamSettingsQuery.isLoading) {
-        return <CardLoader />;
-    }
+    // if (teamSettingsQuery.isLoading) {
+    //     return <CardLoader />;
+    // }
 
     return (
         <TeamConfigurationSurface>
