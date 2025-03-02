@@ -85,18 +85,19 @@ export const TeamConfiguration = () => {
                 <br />
                 <br />
                 <CardTitle>{sdk.extension.name}</CardTitle>
+                <br />
+                <br />
 
-                <Form onSubmit={handleSearch}>
-                    <FormField name="search" label="Search sites">
-                        <input
-                            type="text"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            placeholder="Enter site name"
-                        />
-                    </FormField>
-                    <Button type="submit">Search</Button>
-                </Form>
+                <FormField name="search" label="Search sites">
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Enter site name"
+                    />
+                </FormField>
+                <Button type="button" onClick={handleSearch}>Search</Button>
+
 
                 {displayedSites.map((site) => (
                     <Card key={site.id}>
