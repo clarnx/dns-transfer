@@ -13,3 +13,7 @@ config:
     surfaces:
       - extension-team-configuration
       - extension-top-level-site-configuration
+
+  endpoints:
+    - path: /get-sites
+      function: get-sites
