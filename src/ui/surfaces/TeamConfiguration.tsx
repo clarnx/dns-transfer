@@ -35,44 +35,44 @@ export const TeamConfiguration = () => {
     const sitesPerPage = 10;
 
 
-    const fetchSites = async () => {
-        try {
-            const response = await fetch("/.netlify/functions/get-sites");
-            if (!response.ok) {
-                throw new Error('Failed to fetch sites');
-            }
-            const data = await response.json();
-            setAllSites(data.sites);
-        } catch (error) {
-            console.error("Error fetching sites:", error);
-        }
-    };
+    // const fetchSites = async () => {
+    //     try {
+    //         const response = await fetch("/.netlify/functions/get-sites");
+    //         if (!response.ok) {
+    //             throw new Error('Failed to fetch sites');
+    //         }
+    //         const data = await response.json();
+    //         setAllSites(data.sites);
+    //     } catch (error) {
+    //         console.error("Error fetching sites:", error);
+    //     }
+    // };
 
 
-    useEffect(() => {
-        fetchSites();
-    }, [fetch]);
+    // useEffect(() => {
+    //     fetchSites();
+    // }, [fetch]);
 
 
-    useEffect(() => {
-        const filteredSites = allSites.filter(site =>
-            site.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        const startIndex = (page - 1) * sitesPerPage;
-        setDisplayedSites(filteredSites.slice(startIndex, startIndex + sitesPerPage));
-    }, [allSites, page, searchTerm]);
+    // useEffect(() => {
+    //     const filteredSites = allSites.filter(site =>
+    //         site.name.toLowerCase().includes(searchTerm.toLowerCase())
+    //     );
+    //     const startIndex = (page - 1) * sitesPerPage;
+    //     setDisplayedSites(filteredSites.slice(startIndex, startIndex + sitesPerPage));
+    // }, [allSites, page, searchTerm]);
 
 
-    const handleSearch = (event) => {
-        event.preventDefault();
-        setSearchTerm(event.target.search.value);
-        setPage(1);
-    };
+    // const handleSearch = (event) => {
+    //     event.preventDefault();
+    //     setSearchTerm(event.target.search.value);
+    //     setPage(1);
+    // };
 
 
-    const totalPages = Math.ceil(allSites.filter(site =>
-        site.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ).length / sitesPerPage);
+    // const totalPages = Math.ceil(allSites.filter(site =>
+    //     site.name.toLowerCase().includes(searchTerm.toLowerCase())
+    // ).length / sitesPerPage);
 
     // if (teamSettingsQuery.isLoading) {
     //     return <CardLoader />;
@@ -80,7 +80,8 @@ export const TeamConfiguration = () => {
 
     return (
         <TeamConfigurationSurface>
-            <Card>
+            hello world
+            {/* <Card>
                 <img src={logoImg} width="128" height="auto" />
                 <br />
                 <br />
@@ -113,7 +114,7 @@ export const TeamConfiguration = () => {
                 <Button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
                     Next
                 </Button>
-            </Card>
+            </Card> */}
         </TeamConfigurationSurface>
     );
 };
