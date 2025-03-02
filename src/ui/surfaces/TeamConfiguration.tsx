@@ -28,21 +28,21 @@ export const TeamConfiguration = () => {
     });
 
     const fetch = useNetlifyExtensionUIFetch();
-    const [sites, setSites] = useState([]);
+    const [allSites, setAllSites] = useState([]);
+    const [displayedSites, setDisplayedSites] = useState([]);
     const [page, setPage] = useState(1);
-    const [hasNextPage, setHasNextPage] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const sitesPerPage = 10;
 
 
-    const fetchSites = async (pageNum: number, search = "") => {
+    const fetchSites = async () => {
         try {
-            const response = await fetch(`/.netlify/functions/get-sites?page=${pageNum}&amp;search=${search}`);
+            const response = await fetch("/.netlify/functions/get-sites");
             if (!response.ok) {
                 throw new Error('Failed to fetch sites');
             }
             const data = await response.json();
-            setSites(data);
-            setHasNextPage(data.length === 10); // Assuming 10 items per page
+            setAllSites(data.sites);
         } catch (error) {
             console.error("Error fetching sites:", error);
         }
@@ -50,15 +50,27 @@ export const TeamConfiguration = () => {
 
 
     useEffect(() => {
-        fetchSites(page, searchTerm);
-    }, [fetch, page, searchTerm]);
+        fetchSites();
+    }, [fetch]);
+
+
+    useEffect(() => {
+        const filteredSites = allSites.filter(site =>
+            site.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        const startIndex = (page - 1) * sitesPerPage;
+        setDisplayedSites(filteredSites.slice(startIndex, startIndex + sitesPerPage));
+    }, [allSites, page, searchTerm]);
 
 
     const handleSearch = (event) => {
         event.preventDefault();
+        setSearchTerm(event.target.search.value);
         setPage(1);
-        fetchSites(1, searchTerm);
     };
+
+
+    const totalPages = Math.ceil(allSites.length / sitesPerPage);
 
     if (teamSettingsQuery.isLoading) {
         return <CardLoader />;
@@ -76,15 +88,14 @@ export const TeamConfiguration = () => {
                     <FormField name="search" label="Search sites">
                         <input
                             type="text"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            defaultValue={searchTerm}
                             placeholder="Enter site name"
                         />
                     </FormField>
                     <Button type="submit">Search</Button>
                 </Form>
 
-                {sites.map((site) => (
+                {displayedSites.map((site) => (
                     <Card key={site.id}>
                         <CardTitle>{site.name}</CardTitle>
                         <p>URL: {site.url}</p>
@@ -95,7 +106,7 @@ export const TeamConfiguration = () => {
                 <Button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
                     Previous
                 </Button>
-                <Button onClick={() => setPage(p => p + 1)} disabled={!hasNextPage}>
+                <Button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
                     Next
                 </Button>
             </Card>
