@@ -27,10 +27,6 @@ export const TeamConfiguration = () => {
         },
     });
 
-    if (teamSettingsQuery.isLoading) {
-        return <CardLoader />;
-    }
-
     const fetch = useNetlifyExtensionUIFetch();
     const [allSites, setAllSites] = useState([]);
     const [displayedSites, setDisplayedSites] = useState([]);
@@ -78,7 +74,9 @@ export const TeamConfiguration = () => {
         site.name.toLowerCase().includes(searchTerm.toLowerCase())
     ).length / sitesPerPage);
 
-
+    if (teamSettingsQuery.isLoading) {
+        return <CardLoader />;
+    }
 
     return (
         <TeamConfigurationSurface>
