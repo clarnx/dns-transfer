@@ -17,3 +17,5 @@ config:
   endpoints:
     - path: /get-sites
       function: get-sites
+    - path: /get-dns-records
+      function: get-dns-records
