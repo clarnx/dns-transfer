@@ -156,12 +156,14 @@ export const TeamConfiguration = () => {
                             <p className="meta">Created on {formatDate(new Date(site?.created_at))}</p>
 
                             <div className="tw-mt-5 tw-block tw-w-full">
-                                <Button variant="pop" className="tw-w-full" onClick={() => fetchDnsRecords(site?.id)} disabled={isFetchingDnsData && siteId === site?.id}>
+                                {/* <Button variant="pop" className="tw-w-full" onClick={() => fetchDnsRecords(site?.id)} disabled={isFetchingDnsData && siteId === site?.id}>
                                     {isFetchingDnsData && siteId === site?.id ? <LoadingSpinner /> : <span>Download DNS Records</span>}
 
-                                </Button>
+                                </Button> */}
 
-                                <a href={`/.netlify/functions/get-dns-records?siteId=${site?.id}`} target="_blank">Download</a>
+                                <Button variant="pop" className="tw-w-full" disabled={isFetchingDnsData && siteId === site?.id}>
+                                    {isFetchingDnsData && siteId === site?.id ? <LoadingSpinner /> : <Link href={`/.netlify/functions/get-dns-records?siteId=${site?.id}`} className="tw-text-white hover:tw-no-underline">Download DNS Records</Link>}
+                                </Button>
                             </div>
                         </Card>
                     ))}</div>}

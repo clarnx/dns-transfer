@@ -16,8 +16,6 @@ export default withNetlifySDKContext(async (req, context) => {
         const requestHeaders = new Headers();
         requestHeaders.append("Authorization", `Bearer ${token}`);
 
-        console.log(token);
-
         const requestOptions = {
             method: "GET",
             headers: requestHeaders,
@@ -71,7 +69,8 @@ export default withNetlifySDKContext(async (req, context) => {
   return new Response(csvContent, {
     headers: {
       'Content-Type': 'text/csv',
-      'Content-Disposition': `attachment; filename="${domainName}_dns-records.csv"`
+      'Content-Disposition': `attachment; filename="${domainName}_dns-records.csv"`,
+      
     }})
 
     } catch (error) {
