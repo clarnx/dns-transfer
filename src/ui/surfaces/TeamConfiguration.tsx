@@ -21,7 +21,7 @@ import { formatDate } from "../../utils/format.ts";
 import noScreenshotSiteImg from "../../assets/blank-site-screenshot.webp";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../components/LoadingSpinner.tsx";
-import convertToCSV from "../../utils/convertToCsv.ts";
+import convertToCSV from "../../utils/convertToCSV.ts";
 import downloadCSV from "../../utils/downloadCSV.ts";
 
 export const TeamConfiguration = () => {
