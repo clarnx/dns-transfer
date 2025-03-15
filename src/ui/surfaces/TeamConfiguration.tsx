@@ -7,9 +7,9 @@ import {
     FormField,
     FormFieldSecret,
     Button,
+    Link,
     ButtonGroup,
-    TeamConfigurationSurface,
-    ProviderAuthCard
+    TeamConfigurationSurface
 
 
 } from "@netlify/sdk/ui/react/components";
@@ -20,6 +20,9 @@ import logoImg from "../../assets/dns-records-transfer.svg";
 import { formatDate } from "../../utils/format.ts";
 import noScreenshotSiteImg from "../../assets/blank-site-screenshot.webp";
 import { useEffect, useState } from "react";
+import LoadingSpinner from "../components/LoadingSpinner.tsx";
+import convertToCSV from "../../utils/convertToCsv.ts";
+import downloadCSV from "../../utils/downloadCSV.ts";
 
 export const TeamConfiguration = () => {
     const sdk = useNetlifySDK();
@@ -31,9 +34,9 @@ export const TeamConfiguration = () => {
         },
     });
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-
     const fetch = useNetlifyExtensionUIFetch();
+    const [isFetchingDnsData, setIsFetchingDnsData] = useState(false);
+    const [siteId, setSiteId] = useState("");
     const [allSites, setAllSites] = useState([]);
     const [displayedSites, setDisplayedSites] = useState([]);
     const [page, setPage] = useState(1);
@@ -55,14 +58,31 @@ export const TeamConfiguration = () => {
         }
     };
 
+    const openCsvInNewTab = (csvContent: any) => {
+        const newWindow = window.open('', '_blank');
+        newWindow.document.write(`<pre>${csvContent}</pre>`);
+        newWindow.document.close();
+    };
+
     const fetchDnsRecords = async (siteId: string) => {
         try {
+            setSiteId(siteId);
+            setIsFetchingDnsData(true);
+
             const response = await fetch(`/.netlify/functions/get-dns-records?siteId=${siteId}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch sites');
             }
             const data = await response.json();
-            console.log("dns response data", data?.dnsRecords);
+            setIsFetchingDnsData(false);
+            setSiteId("");
+
+            const domainName = data?.dnsData[0]?.name;
+            const csvContent = convertToCSV(data?.dnsData[0]?.records);
+
+            downloadCSV(csvContent, `${domainName}_dns_records.csv`);
+            // openCsvInNewTab(csvContent);
+            // downloadCSV(csvContent, 'dns_records.csv');
         } catch (error) {
             console.error("Error fetching sites:", error);
         }
@@ -90,10 +110,6 @@ export const TeamConfiguration = () => {
 
     };
 
-    const handleAuthSuccess = () => {
-        setIsAuthenticated(true);
-    };
-
 
     const totalPages = Math.ceil(allSites.filter(site =>
         site?.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -106,13 +122,6 @@ export const TeamConfiguration = () => {
     console.log(allSites[0]);
     return (
         <TeamConfigurationSurface>
-
-            <ProviderAuthCard />
-            {isAuthenticated ? (
-                <p>is logged in</p>
-            ) : (
-                <p>Please authenticate to view site listings.</p>
-            )}
 
             <Card>
                 <img src={logoImg} width="128" height="auto" />
@@ -147,9 +156,12 @@ export const TeamConfiguration = () => {
                             <p className="meta">Created on {formatDate(new Date(site?.created_at))}</p>
 
                             <div className="tw-mt-5 tw-block tw-w-full">
-                                <Button variant="pop" className="tw-w-full" onClick={() => fetchDnsRecords(site?.id)}>
-                                    Download DNS Records
+                                <Button variant="pop" className="tw-w-full" onClick={() => fetchDnsRecords(site?.id)} disabled={isFetchingDnsData && siteId === site?.id}>
+                                    {isFetchingDnsData && siteId === site?.id ? <LoadingSpinner /> : <span>Download DNS Records</span>}
+
                                 </Button>
+
+                                <a href={`/.netlify/functions/get-dns-records?siteId=${site?.id}`} target="_blank">Download</a>
                             </div>
                         </Card>
                     ))}</div>}
