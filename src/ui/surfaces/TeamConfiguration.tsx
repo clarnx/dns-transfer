@@ -160,10 +160,11 @@ export const TeamConfiguration = () => {
                                     {isFetchingDnsData && siteId === site?.id ? <LoadingSpinner /> : <span>Download DNS Records</span>}
 
                                 </Button> */}
-
-                                <Button variant="pop" className="tw-w-full" disabled={isFetchingDnsData && siteId === site?.id}>
-                                    {isFetchingDnsData && siteId === site?.id ? <LoadingSpinner /> : <Link href={`/.netlify/functions/get-dns-records?siteId=${site?.id}`} className="tw-text-white hover:tw-no-underline">Download DNS Records</Link>}
+                                <a href={`/.netlify/functions/get-dns-records?siteId=${site?.id}`} className="tw-text-white">
+                                <Button variant="pop" className="tw-w-full" disabled={isFetchingDnsData && siteId === site?.id} >
+                                    {isFetchingDnsData && siteId === site?.id ? <LoadingSpinner /> : <>Download DNS Records</>}
                                 </Button>
+                                </a>
                             </div>
                         </Card>
                     ))}</div>}
