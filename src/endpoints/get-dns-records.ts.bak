@@ -21,13 +21,13 @@ export default withNetlifySDKContext(async (req, context) => {
             redirect: "follow"
         };
 
-        const siteDNSresponse = await fetch(`https://api.netlify.com/api/v1/sites/${siteId}/dns`, requestOptions);
+        const response = await fetch(`https://api.netlify.com/api/v1/sites/${siteId}/dns`, requestOptions);
         
-        if (!siteDNSresponse.ok) {
+        if (!response.ok) {
             throw new Error('Failed to fetch dns records');
         }
 
-        const data = await siteDNSresponse.json();
+        const data = await response.json();
 
         // https://api.netlify.com/api/v1/sites/<string>/dns
 
@@ -39,28 +39,16 @@ export default withNetlifySDKContext(async (req, context) => {
         // return Response.json({ dnsData });
 
          // Define your custom headers
-        const customHeaders = ["Name", "Type", "Value", "TTL"];
+        const customHeaders = ["Name", "Type", "Value"];
 
         const domainName = dnsData[0]?.name;
-        const zone_id = domainName?.replaceAll(".", '_') || ""
-     
-        // Fetch dns records based on zone id
-          const siteDNSZoneResponse = await fetch(`https://api.netlify.com/api/v1/dns_zones/${zone_id}/dns_records`, requestOptions);
-        
-        if (!siteDNSZoneResponse.ok) {
-            throw new Error('Failed to fetch dns records');
-        }
-
-        const zoneData = await siteDNSZoneResponse.json();
-
-        const records = zoneData || []
-
+        const records = dnsData[0]?.records;
+        console.log(dnsData[0])
   // Map the data to match your custom headers
   const mappedRecords = records.map((record: any) => ({
-    "Name": record?.hostname || "",
-    "Type": record?.type || "",
-    "Value": record?.value || "",
-    "TTL": record?.ttl || ""
+    "Name": record.hostname,
+    "Type": record.type,
+    "Value": record.value
   }));
 
   // Create CSV content with custom headers
@@ -81,7 +69,7 @@ export default withNetlifySDKContext(async (req, context) => {
   return new Response(csvContent, {
     headers: {
       'Content-Type': 'text/csv',
-      'Content-Disposition': `attachment; filename="${zone_id}_dns-records.csv"`,
+      'Content-Disposition': `attachment; filename="${domainName}_dns-records.csv"`,
       
     }})
 
